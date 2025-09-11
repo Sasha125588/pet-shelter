@@ -38,7 +38,7 @@ export class PetController extends BaseResolver {
   })
   @ApiResponse({ status: 400, description: 'Bad Request.', type: PetResponse })
   async create(@Body() dto: CreatePetDto) {
-    const pet = await this.petService.create(dto);
+    const pet = await this.petService.save(dto);
     return this.wrapSuccess({ pet });
   }
 

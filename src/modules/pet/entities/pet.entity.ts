@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
-import { AdoptionApplication } from 'src/modules/adoption/entities/adoption.entity';
+import { Adoption } from 'src/modules/adoption/entities/adoption.entity';
 
 export enum Sex {
   MALE = 'male',
@@ -88,12 +88,12 @@ export class Pet {
   status: Status;
 
   @ApiProperty({
-    type: () => [AdoptionApplication],
+    type: () => [Adoption],
     description: 'Adoption applications for this pet',
     required: false,
   })
-  @OneToMany(() => AdoptionApplication, (application) => application.pet)
-  adoptionApplications: AdoptionApplication[];
+  @OneToMany(() => Adoption, (application) => application.pet)
+  adoptionApplications: Adoption[];
 
   @ApiProperty({
     type: 'string',

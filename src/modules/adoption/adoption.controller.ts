@@ -1,0 +1,263 @@
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+  Query,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+  ApiQuery,
+} from '@nestjs/swagger';
+import { CreateAdoptionDto } from './dto/create-adoption.dto';
+
+import { AdoptionStatus } from './entities/adoption.entity';
+import { BaseResolver } from 'src/shared/base/base.resolver';
+import { AdoptionService } from './adoption.service';
+import { AdoptionResponse, AdoptionsResponse } from './adoption.model';
+import { UpdateAdoptionDto } from './dto/update-adoption.dto';
+import { PetService } from '../pet/pet.service';
+import { Status } from '../pet/entities/pet.entity';
+
+@ApiTags('📋 Adoption')
+@Controller('adoption')
+export class AdoptionController extends BaseResolver {
+  constructor(
+    private readonly adoptionService: AdoptionService,
+    private readonly petService: PetService,
+  ) {
+    super();
+  }
+
+  @Post()
+  @ApiOperation({ summary: 'Create a new adoption' })
+  @ApiBody({ type: CreateAdoptionDto })
+  @ApiResponse({
+    status: 201,
+    description: 'The adoption has been successfully created.',
+    type: AdoptionResponse,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request.',
+    type: AdoptionResponse,
+  })
+  async create(@Body() dto: CreateAdoptionDto) {
+    const adoption = await this.adoptionService.save(dto);
+    return this.wrapSuccess({ adoption });
+  }
+
+  @Get()
+  @ApiOperation({ summary: 'Get all adoptions' })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: AdoptionStatus,
+    description: 'Filter by adoption status',
+  })
+  @ApiQuery({
+    name: 'pet_id',
+    required: false,
+    type: String,
+    description: 'Filter by pet ID',
+  })
+  @ApiQuery({
+    name: 'applicant_id',
+    required: false,
+    type: String,
+    description: 'Filter by applicant ID',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all adoption.',
+    type: AdoptionsResponse,
+  })
+  async findAll(
+    @Query('status') status?: AdoptionStatus,
+    @Query('pet_id') petId?: string,
+    @Query('applicant_id') applicantId?: string,
+  ) {
+    const where: any = {};
+
+    if (status) {
+      where.status = status;
+    }
+
+    if (petId) {
+      where.pet_id = petId;
+    }
+
+    if (applicantId) {
+      where.applicant_id = applicantId;
+    }
+
+    const adoptionApplications = await this.adoptionService.find({
+      where: Object.keys(where).length > 0 ? where : undefined,
+    });
+    return this.wrapSuccess({ adoptionApplications });
+  }
+
+  @Get('by-pet/:petId')
+  @ApiOperation({ summary: 'Get all adoptions for a specific pet' })
+  @ApiParam({
+    name: 'petId',
+    description: 'Pet ID',
+    example: '550e8400-e29b-41d4-a716-446655440001',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all adoptions for the pet.',
+    type: AdoptionsResponse,
+  })
+  async findByPet(@Param('petId') petId: string) {
+    const adoption = await this.adoptionService.find({
+      where: { pet_id: petId },
+    });
+    return this.wrapSuccess({ adoption });
+  }
+
+  // @Get('by-applicant/:applicantId')
+  // @ApiOperation({
+  //   summary: 'Get all adoption applications by a specific applicant',
+  // })
+  // @ApiParam({
+  //   name: 'applicantId',
+  //   description: 'Applicant ID',
+  //   example: '550e8400-e29b-41d4-a716-446655440002',
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Return all adoption applications by the applicant.',
+  //   type: AdoptionApplicationsResponse,
+  // })
+  // async findByApplicant(@Param('applicantId') applicantId: string) {
+  //   const adoptionApplications = await this.adoptionService.find({
+  //     where: { applicant_id: applicantId },
+  //   });
+  //   return this.wrapSuccess({ adoptionApplications });
+  // }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Get an adoption by id' })
+  @ApiParam({
+    name: 'id',
+    description: 'Adoption ID',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Return the adoption.',
+    type: AdoptionResponse,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Adoption not found.',
+    type: AdoptionResponse,
+  })
+  async findOne(@Param('id') id: string) {
+    const adoption = await this.adoptionService.findOne({
+      where: { id },
+    });
+
+    if (!adoption) {
+      throw new BadRequestException(this.wrapFail('Adoption not found'));
+    }
+
+    return this.wrapSuccess({ adoption });
+  }
+
+  @Patch(':id/status')
+  @ApiOperation({ summary: 'Update adoption status' })
+  @ApiParam({
+    name: 'id',
+    description: 'Adoption ID',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  @ApiBody({ type: UpdateAdoptionDto })
+  @ApiResponse({
+    status: 200,
+    description: 'The adoption status has been successfully updated.',
+    type: AdoptionResponse,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Adoption not found.',
+    type: AdoptionResponse,
+  })
+  async updateStatus(@Param('id') id: string, @Body() dto: UpdateAdoptionDto) {
+    const adoption = await this.adoptionService.findOne({
+      where: { id },
+    });
+
+    if (!adoption) {
+      throw new BadRequestException(this.wrapFail('Adoption  not found'));
+    }
+
+    if (
+      adoption.status === AdoptionStatus.APPROVED &&
+      dto.status === AdoptionStatus.PENDING
+    ) {
+      throw new BadRequestException(
+        this.wrapFail('Cannot change status from approved to pending'),
+      );
+    }
+
+    await this.adoptionService.update(id, { status: dto.status });
+
+    if (dto.status === AdoptionStatus.APPROVED) {
+      await this.petService.update(adoption.pet_id, {
+        status: Status.ADOPTED,
+      });
+    }
+
+    const updatedAdoption = await this.adoptionService.findOne({
+      where: { id },
+    });
+
+    return this.wrapSuccess({ adoption: updatedAdoption });
+  }
+
+  @Delete(':id')
+  @ApiOperation({ summary: 'Delete an adoption' })
+  @ApiParam({
+    name: 'id',
+    description: 'Adoption ID',
+    example: '550e8400-e29b-41d4-a716-446655440000',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'The adoption has been successfully deleted.',
+    type: AdoptionResponse,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Adoption not found.',
+    type: AdoptionResponse,
+  })
+  async delete(@Param('id') id: string) {
+    const adoption = await this.adoptionService.findOne({
+      where: { id },
+    });
+
+    if (!adoption) {
+      throw new BadRequestException(this.wrapFail('Adoption  not found'));
+    }
+
+    if (adoption.status === AdoptionStatus.APPROVED) {
+      throw new BadRequestException(
+        this.wrapFail('Cannot delete approved adoption '),
+      );
+    }
+
+    await this.adoptionService.delete(id);
+    return this.wrapSuccess({ adoption });
+  }
+}
