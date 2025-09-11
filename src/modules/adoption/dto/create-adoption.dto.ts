@@ -8,37 +8,37 @@ export class CreateAdoptionDto {
   })
   @IsUUID()
   @IsNotEmpty()
-  animal_id: string;
+  pet_id: string;
 
-  @ApiProperty({
-    description: 'Full name of the applicant',
-    example: 'John Michael Smith',
-    minLength: 2,
-    maxLength: 100,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @Length(2, 100)
-  applicant_name: string;
+  // @ApiProperty({
+  //   description: 'Full name of the applicant',
+  //   example: 'John Michael Smith',
+  //   minLength: 2,
+  //   maxLength: 100,
+  // })
+  // @IsString()
+  // @IsNotEmpty()
+  // @Length(2, 100)
+  // applicant_name: string;
 
-  @ApiProperty({
-    description: 'Phone number of the applicant',
-    example: '+1234567890',
-    minLength: 10,
-    maxLength: 20,
-  })
-  @IsString()
-  @IsNotEmpty()
-  @Length(10, 20)
-  applicant_phone: string;
+  // @ApiProperty({
+  //   description: 'Phone number of the applicant',
+  //   example: '+1234567890',
+  //   minLength: 10,
+  //   maxLength: 20,
+  // })
+  // @IsString()
+  // @IsNotEmpty()
+  // @Length(10, 20)
+  // applicant_phone: string;
 
-  @ApiProperty({
-    description: 'Email address of the applicant',
-    example: 'john.smith@example.com',
-  })
-  @IsEmail()
-  @IsNotEmpty()
-  applicant_email: string;
+  // @ApiProperty({
+  //   description: 'Email address of the applicant',
+  //   example: 'john.smith@example.com',
+  // })
+  // @IsEmail()
+  // @IsNotEmpty()
+  // applicant_email: string;
 
   @ApiProperty({
     description: 'Message explaining why the applicant wants to adopt this pet',

@@ -14,7 +14,7 @@ export enum Sex {
   FEMALE = 'female',
 }
 
-export enum Status {
+export enum PetStatus {
   AVAILABLE = 'available',
   PENDING = 'pending',
   ADOPTED = 'adopted',
@@ -81,11 +81,11 @@ export class Pet {
   @ApiProperty({
     type: 'string',
     description: 'Pet status',
-    enum: Status,
-    example: Status.AVAILABLE,
+    enum: PetStatus,
+    example: PetStatus.AVAILABLE,
   })
-  @Column({ type: 'enum', enum: Status, default: Status.AVAILABLE })
-  status: Status;
+  @Column({ type: 'enum', enum: PetStatus, default: PetStatus.AVAILABLE })
+  status: PetStatus;
 
   @ApiProperty({
     type: () => [Adoption],

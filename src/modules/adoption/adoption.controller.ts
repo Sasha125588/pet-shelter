@@ -20,12 +20,14 @@ import {
 import { CreateAdoptionDto } from './dto/create-adoption.dto';
 
 import { AdoptionStatus } from './entities/adoption.entity';
+import { SortOrder } from './dto/get-adoptions.dto';
 import { BaseResolver } from 'src/shared/base/base.resolver';
 import { AdoptionService } from './adoption.service';
 import { AdoptionResponse, AdoptionsResponse } from './adoption.model';
-import { UpdateAdoptionDto } from './dto/update-adoption.dto';
+import { UpdateAdoptionStatusDto } from './dto/update-adoption.dto';
 import { PetService } from '../pet/pet.service';
-import { Status } from '../pet/entities/pet.entity';
+import { PetStatus } from '../pet/entities/pet.entity';
+import { GetAdoptionsDto } from './dto/get-adoptions.dto';
 
 @ApiTags('📋 Adoption')
 @Controller('adoption')
@@ -58,51 +60,45 @@ export class AdoptionController extends BaseResolver {
   @Get()
   @ApiOperation({ summary: 'Get all adoptions' })
   @ApiQuery({
+    name: 'name',
+    required: false,
+    type: String,
+    description: 'Filter by pet name.',
+  })
+  @ApiQuery({
     name: 'status',
     required: false,
     enum: AdoptionStatus,
-    description: 'Filter by adoption status',
+    description: 'Filter by status. If not provided, returns all adoptions.',
   })
   @ApiQuery({
-    name: 'pet_id',
+    name: 'sort',
     required: false,
-    type: String,
-    description: 'Filter by pet ID',
-  })
-  @ApiQuery({
-    name: 'applicant_id',
-    required: false,
-    type: String,
-    description: 'Filter by applicant ID',
+    enum: SortOrder,
+    description: 'Sort order for creation date',
   })
   @ApiResponse({
     status: 200,
     description: 'Return all adoption.',
     type: AdoptionsResponse,
   })
-  async findAll(
-    @Query('status') status?: AdoptionStatus,
-    @Query('pet_id') petId?: string,
-    @Query('applicant_id') applicantId?: string,
-  ) {
-    const where: any = {};
+  async findAll(@Query() dto: GetAdoptionsDto) {
+    const query = this.adoptionService
+      .createQueryBuilder('adoption')
+      .leftJoinAndSelect('adoption.pet', 'pet');
 
-    if (status) {
-      where.status = status;
+    if (dto.name) {
+      query.andWhere('pet.name ILIKE :name', {
+        name: `%${dto.name}%`,
+      });
     }
-
-    if (petId) {
-      where.pet_id = petId;
+    if (dto.status) {
+      query.andWhere('adoption.status = :status', { status: dto.status });
     }
+    query.addOrderBy('adoption.created_at', dto.sort ?? SortOrder.DESC);
 
-    if (applicantId) {
-      where.applicant_id = applicantId;
-    }
-
-    const adoptionApplications = await this.adoptionService.find({
-      where: Object.keys(where).length > 0 ? where : undefined,
-    });
-    return this.wrapSuccess({ adoptionApplications });
+    const adoption = await query.getMany();
+    return this.wrapSuccess({ adoption });
   }
 
   @Get('by-pet/:petId')
@@ -117,7 +113,7 @@ export class AdoptionController extends BaseResolver {
     description: 'Return all adoptions for the pet.',
     type: AdoptionsResponse,
   })
-  async findByPet(@Param('petId') petId: string) {
+  async findByPetId(@Param('petId') petId: string) {
     const adoption = await this.adoptionService.find({
       where: { pet_id: petId },
     });
@@ -167,10 +163,6 @@ export class AdoptionController extends BaseResolver {
       where: { id },
     });
 
-    if (!adoption) {
-      throw new BadRequestException(this.wrapFail('Adoption not found'));
-    }
-
     return this.wrapSuccess({ adoption });
   }
 
@@ -181,7 +173,7 @@ export class AdoptionController extends BaseResolver {
     description: 'Adoption ID',
     example: '550e8400-e29b-41d4-a716-446655440000',
   })
-  @ApiBody({ type: UpdateAdoptionDto })
+  @ApiBody({ type: UpdateAdoptionStatusDto })
   @ApiResponse({
     status: 200,
     description: 'The adoption status has been successfully updated.',
@@ -192,7 +184,10 @@ export class AdoptionController extends BaseResolver {
     description: 'Adoption not found.',
     type: AdoptionResponse,
   })
-  async updateStatus(@Param('id') id: string, @Body() dto: UpdateAdoptionDto) {
+  async updateStatus(
+    @Param('id') id: string,
+    @Body() dto: UpdateAdoptionStatusDto,
+  ) {
     const adoption = await this.adoptionService.findOne({
       where: { id },
     });
@@ -210,19 +205,19 @@ export class AdoptionController extends BaseResolver {
       );
     }
 
-    await this.adoptionService.update(id, { status: dto.status });
+    await this.adoptionService.update(id, dto);
 
     if (dto.status === AdoptionStatus.APPROVED) {
       await this.petService.update(adoption.pet_id, {
-        status: Status.ADOPTED,
+        status: PetStatus.ADOPTED,
       });
     }
 
-    const updatedAdoption = await this.adoptionService.findOne({
-      where: { id },
-    });
+    // const updatedAdoption = await this.adoptionService.findOne({
+    //   where: { id },
+    // });
 
-    return this.wrapSuccess({ adoption: updatedAdoption });
+    return this.wrapSuccess({ adoption });
   }
 
   @Delete(':id')
@@ -249,12 +244,6 @@ export class AdoptionController extends BaseResolver {
 
     if (!adoption) {
       throw new BadRequestException(this.wrapFail('Adoption  not found'));
-    }
-
-    if (adoption.status === AdoptionStatus.APPROVED) {
-      throw new BadRequestException(
-        this.wrapFail('Cannot delete approved adoption '),
-      );
     }
 
     await this.adoptionService.delete(id);
