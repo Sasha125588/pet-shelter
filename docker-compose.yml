@@ -1,6 +1,6 @@
 services:
   pg:
-    container_name: pet-store-postgres
+    container_name: pet-shelter-postgres
     image: postgres:latest
     restart: always
     environment:
@@ -14,10 +14,10 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
-      - pet-store-network
+      - pet-shelter-network
 
 volumes:
   pgdata:
 
 networks:
-  pet-store-network:
+  pet-shelter-network:

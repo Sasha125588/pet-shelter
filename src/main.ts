@@ -8,7 +8,7 @@ async function bootstrap() {
   app.setGlobalPrefix('/api/v1');
 
   const apiConfig = new DocumentBuilder()
-    .setTitle('Pet Store')
+    .setTitle('Pet Shelter')
     .setVersion('1.0')
     .build();
 
