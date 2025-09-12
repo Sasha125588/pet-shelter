@@ -43,7 +43,7 @@ export class Pet {
     description: 'Pet description',
     example: 'Affectionate kitty',
   })
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   @ApiProperty({
@@ -67,7 +67,7 @@ export class Pet {
     description: 'Pet breed',
     example: 'British Shorthair',
   })
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   breed: string;
 
   @ApiProperty({

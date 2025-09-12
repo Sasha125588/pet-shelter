@@ -12,7 +12,7 @@ export class AdoptionResponse extends BaseResponse {
 
 export class AdoptionsResponse extends BaseResponse {
   @ApiProperty({
-    description: 'Adoption',
+    description: 'Adoptions',
     type: [Adoption],
   })
   adoptions: Adoption[];

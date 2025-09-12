@@ -1,19 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { apiReference } from '@scalar/nestjs-api-reference';
+import { setupSwagger } from './shared/utils/swagger';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('/api/v1');
 
-  const apiConfig = new DocumentBuilder()
-    .setTitle('Pet Shelter')
-    .setVersion('1.0')
-    .build();
+  app.useGlobalPipes(new ValidationPipe());
 
-  const document = SwaggerModule.createDocument(app, apiConfig);
-  SwaggerModule.setup('api', app, document);
+  setupSwagger(app);
 
   await app.listen(process.env.PORT ?? 3000);
 }

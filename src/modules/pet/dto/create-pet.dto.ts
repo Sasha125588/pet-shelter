@@ -5,7 +5,9 @@ import {
   IsOptional,
   IsPositive,
   IsString,
+  Length,
   Max,
+  MaxLength,
 } from 'class-validator';
 import { Sex } from '../entities/pet.entity';
 
@@ -17,7 +19,9 @@ export class CreatePetDto {
     required: true,
   })
   @IsString()
-  @Max(32)
+  @MaxLength(32, {
+    message: 'Name must not be longer than 32 characters',
+  })
   name: string;
 
   @ApiProperty({
@@ -27,7 +31,9 @@ export class CreatePetDto {
     required: false,
   })
   @IsString()
-  @Max(256)
+  @MaxLength(256, {
+    message: 'Description must not be longer than 256 characters',
+  })
   description: string;
 
   @ApiProperty({
@@ -35,7 +41,7 @@ export class CreatePetDto {
     description: 'Pet sex',
     example: 'female',
   })
-  @IsEnum({ enum: Sex })
+  @IsEnum(Sex, { message: 'Sex must be either "male" or "female"' })
   sex: Sex;
 
   @ApiProperty({
@@ -51,6 +57,7 @@ export class CreatePetDto {
     type: 'string',
     description: 'Pet breed',
     example: 'British Shorthair',
+    required: false,
   })
   @IsString()
   @IsOptional()

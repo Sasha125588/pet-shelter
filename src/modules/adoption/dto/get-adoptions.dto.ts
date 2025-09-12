@@ -20,7 +20,7 @@ export class GetAdoptionsDto {
 
   @ApiProperty({
     description: 'Filter by status',
-    example: AdoptionStatus,
+    example: AdoptionStatus.PENDING,
     required: false,
   })
   @IsOptional()

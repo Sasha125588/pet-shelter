@@ -12,7 +12,9 @@ export class UpdatePetDto extends PartialType(CreatePetDto) {
     example: 'available',
     required: false,
   })
-  @IsEnum({ enum: PetStatus })
+  @IsEnum(PetStatus, {
+    message: 'Status must be one of: "available", "pending", or "adopted"',
+  })
   @IsOptional()
   status: PetStatus;
 }

@@ -8,13 +8,7 @@ import {
   Delete,
   BadRequestException,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { PetService } from './pet.service';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { UpdatePetDto } from './dto/update-pet.dto';
@@ -22,7 +16,7 @@ import { PetResponse, PetsResponse } from './pet.model';
 import { BaseResolver } from 'src/shared/base/base.resolver';
 
 @ApiTags('🐱 Pet')
-@Controller('pet')
+@Controller('pets')
 export class PetController extends BaseResolver {
   constructor(private readonly petService: PetService) {
     super();
@@ -30,13 +24,11 @@ export class PetController extends BaseResolver {
 
   @Post()
   @ApiOperation({ summary: 'Create a new pet' })
-  @ApiBody({ type: CreatePetDto })
   @ApiResponse({
     status: 201,
     description: 'The pet has been successfully created.',
     type: PetResponse,
   })
-  @ApiResponse({ status: 400, description: 'Bad Request.', type: PetResponse })
   async create(@Body() dto: CreatePetDto) {
     const pet = await this.petService.save(dto);
     return this.wrapSuccess({ pet });
@@ -60,16 +52,13 @@ export class PetController extends BaseResolver {
   @ApiParam({
     name: 'id',
     description: 'Pet ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    format: 'uuid',
+
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   @ApiResponse({
     status: 200,
     description: 'Return the pet.',
-    type: PetResponse,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Pet not found.',
     type: PetResponse,
   })
   async findOne(@Param('id') id: string) {
@@ -82,17 +71,13 @@ export class PetController extends BaseResolver {
   @ApiParam({
     name: 'id',
     description: 'Pet ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    format: 'uuid',
+
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
-  @ApiBody({ type: UpdatePetDto })
   @ApiResponse({
     status: 200,
     description: 'The pet has been successfully updated.',
-    type: PetResponse,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Pet not found.',
     type: PetResponse,
   })
   async update(@Param('id') id: string, @Body() dto: UpdatePetDto) {
@@ -103,7 +88,9 @@ export class PetController extends BaseResolver {
     }
 
     await this.petService.update(id, dto);
-    return this.wrapSuccess({ pet });
+
+    const updatedPet = await this.petService.findOne({ where: { id } });
+    return this.wrapSuccess({ updatedPet });
   }
 
   @Delete(':id')
@@ -111,16 +98,12 @@ export class PetController extends BaseResolver {
   @ApiParam({
     name: 'id',
     description: 'Pet ID',
-    example: '123e4567-e89b-12d3-a456-426614174000',
+    format: 'uuid',
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   @ApiResponse({
     status: 200,
     description: 'The pet has been successfully deleted.',
-    type: PetResponse,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Pet not found.',
     type: PetResponse,
   })
   async delete(@Param('id') id: string) {

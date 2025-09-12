@@ -30,7 +30,7 @@ import { PetStatus } from '../pet/entities/pet.entity';
 import { GetAdoptionsDto } from './dto/get-adoptions.dto';
 
 @ApiTags('📋 Adoption')
-@Controller('adoption')
+@Controller('adoptions')
 export class AdoptionController extends BaseResolver {
   constructor(
     private readonly adoptionService: AdoptionService,
@@ -41,15 +41,9 @@ export class AdoptionController extends BaseResolver {
 
   @Post()
   @ApiOperation({ summary: 'Create a new adoption' })
-  @ApiBody({ type: CreateAdoptionDto })
   @ApiResponse({
     status: 201,
     description: 'The adoption has been successfully created.',
-    type: AdoptionResponse,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Bad Request.',
     type: AdoptionResponse,
   })
   async create(@Body() dto: CreateAdoptionDto) {
@@ -59,24 +53,6 @@ export class AdoptionController extends BaseResolver {
 
   @Get()
   @ApiOperation({ summary: 'Get all adoptions' })
-  @ApiQuery({
-    name: 'name',
-    required: false,
-    type: String,
-    description: 'Filter by pet name.',
-  })
-  @ApiQuery({
-    name: 'status',
-    required: false,
-    enum: AdoptionStatus,
-    description: 'Filter by status. If not provided, returns all adoptions.',
-  })
-  @ApiQuery({
-    name: 'sort',
-    required: false,
-    enum: SortOrder,
-    description: 'Sort order for creation date',
-  })
   @ApiResponse({
     status: 200,
     description: 'Return all adoption.',
@@ -106,7 +82,8 @@ export class AdoptionController extends BaseResolver {
   @ApiParam({
     name: 'petId',
     description: 'Pet ID',
-    example: '550e8400-e29b-41d4-a716-446655440001',
+    format: 'uuid',
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   @ApiResponse({
     status: 200,
@@ -146,16 +123,12 @@ export class AdoptionController extends BaseResolver {
   @ApiParam({
     name: 'id',
     description: 'Adoption ID',
-    example: '550e8400-e29b-41d4-a716-446655440000',
+    format: 'uuid',
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   @ApiResponse({
     status: 200,
     description: 'Return the adoption.',
-    type: AdoptionResponse,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Adoption not found.',
     type: AdoptionResponse,
   })
   async findOne(@Param('id') id: string) {
@@ -171,17 +144,12 @@ export class AdoptionController extends BaseResolver {
   @ApiParam({
     name: 'id',
     description: 'Adoption ID',
-    example: '550e8400-e29b-41d4-a716-446655440000',
+    format: 'uuid',
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
-  @ApiBody({ type: UpdateAdoptionStatusDto })
   @ApiResponse({
     status: 200,
     description: 'The adoption status has been successfully updated.',
-    type: AdoptionResponse,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Adoption not found.',
     type: AdoptionResponse,
   })
   async updateStatus(
@@ -193,15 +161,18 @@ export class AdoptionController extends BaseResolver {
     });
 
     if (!adoption) {
-      throw new BadRequestException(this.wrapFail('Adoption  not found'));
+      throw new BadRequestException(this.wrapFail('Adoption not found'));
     }
 
     if (
-      adoption.status === AdoptionStatus.APPROVED &&
-      dto.status === AdoptionStatus.PENDING
+      (adoption.status === AdoptionStatus.APPROVED &&
+        dto.status === AdoptionStatus.PENDING) ||
+      dto.status === AdoptionStatus.REJECTED
     ) {
       throw new BadRequestException(
-        this.wrapFail('Cannot change status from approved to pending'),
+        this.wrapFail(
+          'Cannot change status from approved to pending or refected',
+        ),
       );
     }
 
@@ -213,11 +184,11 @@ export class AdoptionController extends BaseResolver {
       });
     }
 
-    // const updatedAdoption = await this.adoptionService.findOne({
-    //   where: { id },
-    // });
+    const updatedAdoption = await this.adoptionService.findOne({
+      where: { id },
+    });
 
-    return this.wrapSuccess({ adoption });
+    return this.wrapSuccess({ adoption: updatedAdoption });
   }
 
   @Delete(':id')
@@ -225,16 +196,12 @@ export class AdoptionController extends BaseResolver {
   @ApiParam({
     name: 'id',
     description: 'Adoption ID',
-    example: '550e8400-e29b-41d4-a716-446655440000',
+    format: 'uuid',
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   @ApiResponse({
     status: 200,
     description: 'The adoption has been successfully deleted.',
-    type: AdoptionResponse,
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Adoption not found.',
     type: AdoptionResponse,
   })
   async delete(@Param('id') id: string) {
@@ -243,7 +210,7 @@ export class AdoptionController extends BaseResolver {
     });
 
     if (!adoption) {
-      throw new BadRequestException(this.wrapFail('Adoption  not found'));
+      throw new BadRequestException(this.wrapFail('Adoption not found'));
     }
 
     await this.adoptionService.delete(id);
