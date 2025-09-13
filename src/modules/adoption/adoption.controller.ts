@@ -8,6 +8,7 @@ import {
   Delete,
   BadRequestException,
   Query,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -90,7 +91,7 @@ export class AdoptionController extends BaseResolver {
     description: 'Return all adoptions for the pet.',
     type: AdoptionsResponse,
   })
-  async findByPetId(@Param('petId') petId: string) {
+  async findByPetId(@Param('petId', ParseUUIDPipe) petId: string) {
     const adoption = await this.adoptionService.find({
       where: { pet_id: petId },
     });
@@ -131,7 +132,7 @@ export class AdoptionController extends BaseResolver {
     description: 'Return the adoption.',
     type: AdoptionResponse,
   })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const adoption = await this.adoptionService.findOne({
       where: { id },
     });
@@ -153,7 +154,7 @@ export class AdoptionController extends BaseResolver {
     type: AdoptionResponse,
   })
   async updateStatus(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateAdoptionStatusDto,
   ) {
     const adoption = await this.adoptionService.findOne({
@@ -204,7 +205,7 @@ export class AdoptionController extends BaseResolver {
     description: 'The adoption has been successfully deleted.',
     type: AdoptionResponse,
   })
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id', ParseUUIDPipe) id: string) {
     const adoption = await this.adoptionService.findOne({
       where: { id },
     });

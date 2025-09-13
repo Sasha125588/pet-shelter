@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { getDBConfig } from './shared/configs/db.config';
 import { PetModule } from './modules/pet/pet.module';
 import { AdoptionModule } from './modules/adoption/adoption.module';
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { AdoptionModule } from './modules/adoption/adoption.module';
     }),
     PetModule,
     AdoptionModule,
+    UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

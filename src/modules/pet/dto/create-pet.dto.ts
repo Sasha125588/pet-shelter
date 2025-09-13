@@ -5,8 +5,6 @@ import {
   IsOptional,
   IsPositive,
   IsString,
-  Length,
-  Max,
   MaxLength,
 } from 'class-validator';
 import { Sex } from '../entities/pet.entity';

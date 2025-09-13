@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   BadRequestException,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { PetService } from './pet.service';
@@ -61,7 +62,7 @@ export class PetController extends BaseResolver {
     description: 'Return the pet.',
     type: PetResponse,
   })
-  async findOne(@Param('id') id: string) {
+  async findOne(@Param('id', ParseUUIDPipe) id: string) {
     const pet = await this.petService.findOne({ where: { id } });
     return this.wrapSuccess({ pet });
   }
@@ -72,7 +73,6 @@ export class PetController extends BaseResolver {
     name: 'id',
     description: 'Pet ID',
     format: 'uuid',
-
     example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   @ApiResponse({
@@ -80,7 +80,10 @@ export class PetController extends BaseResolver {
     description: 'The pet has been successfully updated.',
     type: PetResponse,
   })
-  async update(@Param('id') id: string, @Body() dto: UpdatePetDto) {
+  async update(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdatePetDto,
+  ) {
     const pet = await this.petService.findOne({ where: { id } });
 
     if (!pet) {
@@ -106,7 +109,7 @@ export class PetController extends BaseResolver {
     description: 'The pet has been successfully deleted.',
     type: PetResponse,
   })
-  async delete(@Param('id') id: string) {
+  async delete(@Param('id', ParseUUIDPipe) id: string) {
     const pet = await this.petService.findOne({ where: { id } });
 
     if (!pet) {
