@@ -1,4 +1,28 @@
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=production
+      - PORT=${PORT}
+      - JWT_SECRET=${JWT_SECRET}
+      - COOKIE_DOMAIN=${COOKIE_DOMAIN}
+      - NGROK_AUTH_TOKEN=${NGROK_AUTH_TOKEN}
+      - JWT_ACCESS_TOKEN_TTL=${JWT_ACCESS_TOKEN_TTL}
+      - JWT_REFRESH_TOKEN_TTL=${JWT_REFRESH_TOKEN_TTL}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_HOST=pg
+      - POSTGRES_PORT=5432
+    depends_on:
+      - pg
+    networks:
+      - pet-shelter-network
+
   pg:
     container_name: pet-shelter-postgres
     image: postgres:latest
@@ -7,10 +31,9 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - POSTGRES_HOST=${POSTGRES_HOST}
       - PGDATA=${PGDATA}
     ports:
-      - 5432:5432
+      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
