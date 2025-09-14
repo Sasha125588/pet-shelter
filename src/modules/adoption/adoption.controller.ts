@@ -10,25 +10,20 @@ import {
   Query,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiResponse,
-  ApiParam,
-  ApiBody,
-  ApiQuery,
-} from '@nestjs/swagger';
-import { CreateAdoptionDto } from './dto/create-adoption.dto';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 
 import { AdoptionStatus } from './entities/adoption.entity';
 import { SortOrder } from './dto/get-adoptions.dto';
 import { BaseResolver } from 'src/shared/base/base.resolver';
 import { AdoptionService } from './adoption.service';
 import { AdoptionResponse, AdoptionsResponse } from './adoption.model';
-import { UpdateAdoptionStatusDto } from './dto/update-adoption.dto';
+import {
+  UpdateAdoptionStatusDto,
+  GetAdoptionsDto,
+  CreateAdoptionDto,
+} from './dto';
 import { PetService } from '../pet/pet.service';
 import { PetStatus } from '../pet/entities/pet.entity';
-import { GetAdoptionsDto } from './dto/get-adoptions.dto';
 
 @ApiTags('📋 Adoption')
 @Controller('adoptions')

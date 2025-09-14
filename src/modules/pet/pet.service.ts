@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePetDto } from './dto/create-pet.dto';
+import type { CreatePetDto } from './dto/create-pet.dto';
 import { BaseService } from 'src/shared/base/base.service';
 import { Pet } from './entities/pet.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import type { Repository } from 'typeorm';
 
 @Injectable()
 export class PetService extends BaseService<Pet> {

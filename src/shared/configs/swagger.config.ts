@@ -1,6 +1,6 @@
 import { DocumentBuilder } from '@nestjs/swagger';
 
-export function getSwaggerConfig() {
+export const getSwaggerConfig = () => {
   return new DocumentBuilder()
     .setTitle('Pet Shelter')
     .setDescription(
@@ -9,4 +9,4 @@ export function getSwaggerConfig() {
     .setVersion('1.0')
     .addBearerAuth()
     .build();
-}
+};

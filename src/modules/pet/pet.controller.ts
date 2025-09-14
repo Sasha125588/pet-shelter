@@ -11,8 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { PetService } from './pet.service';
-import { CreatePetDto } from './dto/create-pet.dto';
-import { UpdatePetDto } from './dto/update-pet.dto';
+import { CreatePetDto, UpdatePetDto } from './dto';
 import { PetResponse, PetsResponse } from './pet.model';
 import { BaseResolver } from 'src/shared/base/base.resolver';
 

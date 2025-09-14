@@ -7,22 +7,21 @@ import {
   Post,
   Req,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { RegisterRequstDto } from './dto/register.dto';
-import { LoginRequestDto } from './dto/login.dto';
+import { RegisterRequstDto, LoginRequestDto } from './dto';
 import type { Request, Response } from 'express';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { AuthResponse } from './auth.model';
-import { AuthGuard } from '@nestjs/passport';
-import { Authorization } from './decorators/authorization.decorator';
-import { Authorized } from './decorators/authorized.decorator';
-import { User } from '../user/entities/user.entity';
+import { Authorization, Authorized } from './decorators';
+import type { User } from '../user/entities/user.entity';
+import { BaseResolver } from 'src/shared/base/base.resolver';
 
 @Controller('auth')
-export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+export class AuthController extends BaseResolver {
+  constructor(private readonly authService: AuthService) {
+    super();
+  }
 
   @ApiOperation({
     summary: 'Register new user',
@@ -35,7 +34,8 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Body() RegisterRequstDto: RegisterRequstDto,
   ) {
-    return await this.authService.register(res, RegisterRequstDto);
+    const accesToken = await this.authService.register(res, RegisterRequstDto);
+    return this.wrapSuccess({ accesToken });
   }
 
   @ApiOperation({
@@ -49,7 +49,8 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
     @Body() LoginRequestDto: LoginRequestDto,
   ) {
-    return await this.authService.login(res, LoginRequestDto);
+    const accesToken = await this.authService.login(res, LoginRequestDto);
+    return this.wrapSuccess({ accesToken });
   }
 
   @ApiOperation({
@@ -63,7 +64,8 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    return await this.authService.refresh(req, res);
+    const tokens = await this.authService.refresh(req, res);
+    return this.wrapSuccess({ tokens });
   }
 
   @ApiOperation({
@@ -72,7 +74,8 @@ export class AuthController {
   @Post('logout')
   @HttpCode(HttpStatus.OK)
   async logout(@Res({ passthrough: true }) res: Response) {
-    return await this.authService.logout(res);
+    const isSuccess = await this.authService.logout(res);
+    return this.wrapSuccess(isSuccess);
   }
 
   @ApiOperation({
@@ -82,6 +85,6 @@ export class AuthController {
   @Get('@me')
   @HttpCode(HttpStatus.OK)
   me(@Authorized() user: User) {
-    return user;
+    return this.wrapSuccess({ user });
   }
 }

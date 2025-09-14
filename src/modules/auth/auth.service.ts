@@ -4,14 +4,13 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { RegisterRequstDto } from './dto/register.dto';
 import { UserService } from '../user/user.service';
 import { hash, verify } from 'argon2';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { LoginRequestDto } from './dto/login.dto';
+import type { LoginRequestDto, RegisterRequstDto } from './dto';
 import type { Request, Response } from 'express';
-import { isDev } from 'src/shared/helpers/is-dev';
+import { isDev } from 'src/shared/utils/is-dev';
 
 @Injectable()
 export class AuthService {
@@ -35,6 +34,7 @@ export class AuthService {
 
   async register(res: Response, RegisterRequstDto: RegisterRequstDto) {
     const { username, email, password } = RegisterRequstDto;
+
     const existingUser = await this.userService.findOne({
       where: { email },
     });
@@ -73,14 +73,14 @@ export class AuthService {
   }
 
   async refresh(req: Request, res: Response) {
-    const refreshToker = req.cookies['refreshToken'];
+    const refreshToken = req.cookies['refreshToken'];
 
-    if (!refreshToker) throw new UnauthorizedException('Invalid refresh token');
+    if (!refreshToken) throw new UnauthorizedException('Invalid refresh token');
 
     const payload: { id: string } =
-      await this.jwtService.verifyAsync(refreshToker);
+      await this.jwtService.verifyAsync(refreshToken);
 
-    if (!payload) return;
+    if (!payload) throw new UnauthorizedException('Invalid refresh token');
 
     const user = await this.userService.findOne({
       where: {
@@ -113,16 +113,6 @@ export class AuthService {
     return accessToken;
   }
 
-  async validate(id: string) {
-    const user = await this.userService.findOne({ where: { id } });
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return user;
-  }
-
   private generateTokens(id: string) {
     const payload: { id: string } = { id };
 
@@ -148,5 +138,15 @@ export class AuthService {
       secure: !isDev(this.configService),
       sameSite: isDev ? 'none' : 'lax',
     });
+  }
+
+  async validate(id: string) {
+    const user = await this.userService.findOne({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return user;
   }
 }

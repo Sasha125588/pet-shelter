@@ -3,7 +3,7 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { getSwaggerConfig } from '../configs/swagger.config';
 import { apiReference } from '@scalar/nestjs-api-reference';
 
-export function setupSwagger(app: INestApplication) {
+export const setupSwagger = (app: INestApplication) => {
   const config = getSwaggerConfig();
   const document = SwaggerModule.createDocument(app, config);
 
@@ -15,4 +15,4 @@ export function setupSwagger(app: INestApplication) {
       content: document,
     }),
   );
-}
+};
