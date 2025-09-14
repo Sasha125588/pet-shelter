@@ -1,99 +1,157 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🐾 Притулок для Тварин API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 📝 Опис
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Це серверна частина застосунку для управління притулком для тварин, розроблена з використанням NestJS. Система дозволяє керувати процесами прихистку тварин, їх усиновлення та взаємодії з користувачами.
 
-## Description
+## 🚀 Основні можливості
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- 🔐 Автентифікація та авторизація користувачів
+- 🐈 Управління картками тварин
+- 📋 Процес усиновлення
+- 👥 Управління користувачами
+- 📊 Swagger документація API
 
-## Project setup
+## 🛠 Технічний стек
 
-```bash
-$ yarn install
+- **Framework**: NestJS
+- **Мова програмування**: TypeScript
+- **База даних**: PostgreSQL
+- **ORM**: TypeORM
+- **Автентифікація**: JWT + Passport
+- **Документація**: Swagger + Scalar
+- **Валідація**: class-validator
+- **Хешування паролів**: Argon2
+
+## 🗂 Структура проекту
+
+```
+📁 src/
+├── 📁 modules/                    # Основні модулі застосунку
+│   ├── 📁 adoption/              # Модуль усиновлення
+│   │   ├── 📁 dto/              # Data Transfer Objects
+│   │   │   ├── create-adoption.dto.ts
+│   │   │   ├── get-adoptions.dto.ts
+│   │   │   └── update-adoption.dto.ts
+│   │   ├── 📁 entities/         # Сутності бази даних
+│   │   └── adoption.{controller|model|module|service}.ts
+│   ├── 📁 auth/                 # Модуль автентифікації
+│   │   ├── 📁 dto/             # DTO для авторизації
+│   │   │   ├── login.dto.ts
+│   │   │   └── register.dto.ts
+│   │   ├── 📁 jwt/             # JWT конфігурація
+│   │   │   ├── jwt.guard.ts
+│   │   │   └── jwt.strategy.ts
+│   │   └── auth.{controller|model|module|service}.ts
+│   ├── 📁 pet/                  # Модуль управління тваринами
+│   │   ├── 📁 dto/
+│   │   ├── 📁 entities/
+│   │   └── pet.{controller|model|module|service}.ts
+│   └── 📁 user/                 # Модуль користувачів
+│       ├── 📁 entities/
+│       └── user.{controller|module|service}.ts
+├── 📁 shared/                    # Спільні компоненти
+│   ├── 📁 base/                 # Базові класи
+│   │   ├── base.model.ts
+│   │   ├── base.resolver.ts
+│   │   └── base.service.ts
+│   ├── 📁 configs/              # Конфігурації
+│   │   ├── db.config.ts        # Налаштування бази даних
+│   │   ├── jwt.config.ts       # Налаштування JWT
+│   │   └── swagger.config.ts   # Налаштування Swagger
+│   └── 📁 utils/                # Утиліти
+│       ├── is-dev.ts
+│       └── swagger.ts
+├── app.module.ts                 # Головний модуль застосунку
+└── main.ts                       # Точка входу застосунку
+
+📁 Додаткові файли
+├── 🐳 Dockerfile                # Конфігурація Docker
+├── ⚙️ docker-compose.yml        # Налаштування Docker Compose
+├── 📄 .env.example             # Приклад змінних середовища
+├── 📄 nest-cli.json           # Конфігурація NestJS CLI
+└── 📄 tsconfig.json           # Налаштування TypeScript
 ```
 
-## Compile and run the project
+## 🔧 Налаштування проекту
 
-```bash
-# development
-$ yarn run start
+### Передумови
 
-# watch mode
-$ yarn run start:dev
+- Node.js (версія 18 або вище)
+- PostgreSQL
+- Docker (опціонально)
 
-# production mode
-$ yarn run start:prod
+### Змінні середовища
+
+Створіть файл `.env` в корені проекту з наступними змінними:
+
+```env
+# Налаштування середовища
+NODE_ENV=development
+PORT=3000
+
+# Налаштування домену для cookies
+COOKIE_DOMAIN=localhost
+
+# JWT налаштування
+JWT_SECRET=some-secret
+JWT_ACCESS_TOKEN_TTL='1h'
+JWT_REFRESH_TOKEN_TTL='7d'
+
+# Налаштування бази даних PostgreSQL
+POSTGRES_DB=pet-shelter
+POSTGRES_USER=user
+POSTGRES_PASSWORD=123
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+PGDATA=/var/lib/postgresql/data
+
+# Налаштування Ngrok (опціонально)
+NGROK_AUTH_TOKEN=token
 ```
 
-## Run tests
+### Встановлення
 
 ```bash
-# unit tests
-$ yarn run test
+# Встановлення залежностей
+yarn install
 
-# e2e tests
-$ yarn run test:e2e
+# Запуск у режимі розробки
+yarn dev
 
-# test coverage
-$ yarn run test:cov
+# Збірка проекту
+yarn build
+
+# Запуск у продакшн режимі
+yarn start:prod
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Docker
 
 ```bash
-$ yarn install -g mau
-$ mau deploy
+# Запуск з Docker Compose у фоновому режимі
+docker-compose up -d
+
+# Перегляд логів застосунку (включно з URL ngrok тунелю)
+docker-compose logs -f app
+
+# Щоб побачити лише URL ngrok тунелю
+docker-compose logs app | grep "ngrok tunnel established at"
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+> **Примітка**: Після запуску в фоновому режимі, URL ngrok тунелю можна знайти в логах застосунку. Цей URL буде вашою публічною точкою доступу до API.
 
-## Resources
+## 📚 API Документація
 
-Check out a few resources that may come in handy when working with NestJS:
+Після запуску застосунку, документація API доступна за адресами:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- Swagger UI: `http://localhost:3000/api`
+- Scalar API Reference: `http://localhost:3000/reference`
 
-## Support
+## 📝 Ліцензія
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Цей проект розповсюджується під ліцензією [UNLICENSED].
 
-## Stay in touch
+## 👥 Автори
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+Розроблено з ❤️ для допомоги тваринам.
