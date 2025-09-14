@@ -7,7 +7,9 @@ export const setupSwagger = (app: INestApplication) => {
   const config = getSwaggerConfig();
   const document = SwaggerModule.createDocument(app, config);
 
-  SwaggerModule.setup('/docs', app, document);
+  SwaggerModule.setup('/docs', app, document, {
+    jsonDocumentUrl: 'docs.json',
+  });
 
   app.use(
     '/docs2',

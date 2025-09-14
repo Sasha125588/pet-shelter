@@ -11,11 +11,10 @@ import {
 import { AuthService } from './auth.service';
 import { RegisterRequstDto, LoginRequestDto } from './dto';
 import type { Request, Response } from 'express';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
 import { AuthResponse } from './auth.model';
-import { Authorization, Authorized } from './decorators';
-import type { User } from '../user/entities/user.entity';
 import { BaseResolver } from 'src/shared/base/base.resolver';
+import { UseJwtAuth } from './jwt';
 
 @Controller('auth')
 export class AuthController extends BaseResolver {
@@ -34,8 +33,8 @@ export class AuthController extends BaseResolver {
     @Res({ passthrough: true }) res: Response,
     @Body() RegisterRequstDto: RegisterRequstDto,
   ) {
-    const accesToken = await this.authService.register(res, RegisterRequstDto);
-    return this.wrapSuccess({ accesToken });
+    const accessToken = await this.authService.register(res, RegisterRequstDto);
+    return this.wrapSuccess({ accessToken });
   }
 
   @ApiOperation({
@@ -49,8 +48,8 @@ export class AuthController extends BaseResolver {
     @Res({ passthrough: true }) res: Response,
     @Body() LoginRequestDto: LoginRequestDto,
   ) {
-    const accesToken = await this.authService.login(res, LoginRequestDto);
-    return this.wrapSuccess({ accesToken });
+    const accessToken = await this.authService.login(res, LoginRequestDto);
+    return this.wrapSuccess({ accessToken });
   }
 
   @ApiOperation({
@@ -78,13 +77,16 @@ export class AuthController extends BaseResolver {
     return this.wrapSuccess(isSuccess);
   }
 
-  @ApiOperation({
-    summary: 'Me',
-  })
-  @Authorization()
-  @Get('@me')
-  @HttpCode(HttpStatus.OK)
-  me(@Authorized() user: User) {
-    return this.wrapSuccess({ user });
-  }
+  // @ApiOperation({
+  //   summary: 'Get current user',
+  //   description: 'Returns information about the currently authenticated user',
+  // })
+  // @ApiBearerAuth()
+  // @UseJwtAuth()
+  // @Get('@me')
+  // @HttpCode(HttpStatus.OK)
+  // me(@Req() req: Request) {
+  //   const user = req.user;
+  //   return this.wrapSuccess({ user });
+  // }
 }

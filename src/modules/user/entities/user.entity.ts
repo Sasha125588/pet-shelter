@@ -1,8 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
+import { Adoption } from 'src/modules/adoption/entities/adoption.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -30,12 +33,20 @@ export class User {
   })
   email: string;
 
+  @Exclude()
   @Column({
     type: 'varchar',
     name: 'password',
     nullable: false,
   })
   password: string;
+
+  @ApiProperty({
+    description: 'User adoption applications',
+    type: () => [Adoption],
+  })
+  @OneToMany(() => Adoption, (adoption) => adoption.applicant)
+  adoptions: Adoption[];
 
   @ApiProperty({
     type: 'string',

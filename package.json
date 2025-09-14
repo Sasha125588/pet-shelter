@@ -28,6 +28,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/swagger": "^11.2.0",
     "@nestjs/typeorm": "^11.0.0",
+    "@ngrok/ngrok": "^1.5.2",
     "@scalar/nestjs-api-reference": "0.5.14",
     "argon2": "^0.44.0",
     "class-transformer": "^0.5.1",

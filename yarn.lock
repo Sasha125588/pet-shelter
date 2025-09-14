@@ -823,6 +823,90 @@
   resolved "https://registry.yarnpkg.com/@nestjs/typeorm/-/typeorm-11.0.0.tgz#b0f45d6902396db89e0ac1f4e738c2ff3407b794"
   integrity sha512-SOeUQl70Lb2OfhGkvnh4KXWlsd+zA08RuuQgT7kKbzivngxzSo1Oc7Usu5VxCxACQC9wc2l9esOHILSJeK7rJA==
 
+"@ngrok/ngrok-android-arm64@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-android-arm64/-/ngrok-android-arm64-1.5.2.tgz#da8c7ca95ac86feba2def353348084e368a4ef76"
+  integrity sha512-v81VbxxAgg2W7jbjhEcn8K9R2aUf0h1AuTx+8tDlw3L4H1YEmbmllIpBAGgMjHRBxLZKOo5GBi0k7oS+VRM5TA==
+
+"@ngrok/ngrok-darwin-arm64@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-darwin-arm64/-/ngrok-darwin-arm64-1.5.2.tgz#ee00b5a6b21f6eb9be5bdf905fd3269d880169fb"
+  integrity sha512-8CVzS9AveYpNhWbydm7cJ6XqmVg29/VRKF15l4kJ2djlNoJxuGSibgM9A627dWRdnJyj5uhmU3VzsgeU8t+/3g==
+
+"@ngrok/ngrok-darwin-universal@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-darwin-universal/-/ngrok-darwin-universal-1.5.2.tgz#c4c5f59964cef9c3fdc303bbe6413c746e769908"
+  integrity sha512-mEMH1OxN6RxnqRSWb4xY9RqbtdlCpv+WlRKxq4lVy8JVsxEyFNnzVQ0jn+iuiy981jCXjokctzJeGMvECuSQBQ==
+
+"@ngrok/ngrok-darwin-x64@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-darwin-x64/-/ngrok-darwin-x64-1.5.2.tgz#2ccd58d442b9bc9b49dcf04131343e74c762cbc7"
+  integrity sha512-rGdcADw4NtMSU7SHUTly7uvMVYX6eMeMCppKyL5g3CSlEQntKf3AWs/89ah2TBWJA2WVl0UgGLkXp4xs1tg9eQ==
+
+"@ngrok/ngrok-freebsd-x64@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-freebsd-x64/-/ngrok-freebsd-x64-1.5.2.tgz#98941fa7accb150b71456321804779770cfeab44"
+  integrity sha512-WgY54qUekaUGa5+lFvzYUMjlzf22IEXuZHhxnzJM2/gMqa7gjU8N5W4U8XNDjVW/oz6DekrzIjuoAEPO+2icDg==
+
+"@ngrok/ngrok-linux-arm-gnueabihf@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-linux-arm-gnueabihf/-/ngrok-linux-arm-gnueabihf-1.5.2.tgz#41ddeb12526f6b3e0dd0e2d784637115c18f16a0"
+  integrity sha512-azMxr/TGEeFU4JAUbSu5MO2aZEvdq+TzcxiLw6d+yhdEtNAjDW9TOyCczTrIZPOG5fP8G3lcCd8TP7mVIWdOnw==
+
+"@ngrok/ngrok-linux-arm64-gnu@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-linux-arm64-gnu/-/ngrok-linux-arm64-gnu-1.5.2.tgz#76deedd2912bfa8bfb38b53031fe92efc4e3c6d1"
+  integrity sha512-79eFCxio4rM0ICRBXx/CVvbXDeWk1Jxr7szkezEYWtHaL+gXivrtS1QjtMnJpGY1GJlLTQL+49w2lGydqPOJQA==
+
+"@ngrok/ngrok-linux-arm64-musl@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-linux-arm64-musl/-/ngrok-linux-arm64-musl-1.5.2.tgz#c45e7bbfa06e906beac1bb1bf11ca47ccb40f186"
+  integrity sha512-ou9Z7iPQJIQ0RX5bdBhb3y7GwYRt+X0G9tenyRzKLXXvs0XfUUcg/23aBP61hmdRvBq7xpliV1PnvEVBgUIYMg==
+
+"@ngrok/ngrok-linux-x64-gnu@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-linux-x64-gnu/-/ngrok-linux-x64-gnu-1.5.2.tgz#171e30ed40aab3dbdbf021c378ce5fd152114807"
+  integrity sha512-VI1mmtl3Ie5uXTVAR9thPiMNMsCWeqkjBUbHAyk2vZ2OXR4Vs2DGjOPXK+wTl/hjF29FXoxunjhMy6caF9ht0Q==
+
+"@ngrok/ngrok-linux-x64-musl@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-linux-x64-musl/-/ngrok-linux-x64-musl-1.5.2.tgz#b0ab90a17dfca4fa6196c900f904a8b50fe19de7"
+  integrity sha512-F4j9EyC/0R3IgYSd+OER4bC8bxuBubvj33e24GvQnRF/IQaKhpybkvQbz54fnvsL7y0j2BB42NAIm2CFtk7tCw==
+
+"@ngrok/ngrok-win32-arm64-msvc@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-win32-arm64-msvc/-/ngrok-win32-arm64-msvc-1.5.2.tgz#f3edee02b94a2f3502ac681c49a7b6a4af7f6292"
+  integrity sha512-0OMXNjWElM1MQX7lMBnpRtafS9+3ybauqGD4m2dZcIm6hFvexsJFwNgx0mCa5aKxe2mQ4zNarEUd+SqG2Aa4/g==
+
+"@ngrok/ngrok-win32-ia32-msvc@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-win32-ia32-msvc/-/ngrok-win32-ia32-msvc-1.5.2.tgz#32ccbb724ee80acfdd1e9d74841c14029c3a3872"
+  integrity sha512-hdvhnr7Br4XhUblpW67v5XP6FyoQwJ2xSbwas4KW4hZ3F4cw0m6sqXpssRfmqg3/5HJony1H5B2jLi0x4J7uOw==
+
+"@ngrok/ngrok-win32-x64-msvc@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok-win32-x64-msvc/-/ngrok-win32-x64-msvc-1.5.2.tgz#46a65141ee645b2132f04b75e8eb79479019e35a"
+  integrity sha512-aHuMiRti9Taow9DlYLGVmu9CXtXD/v4CBQWpZlmt7VGuK1KsTWWLaGIBFVp6UXnyW87b0A+KC69Kn/Xjylw+sg==
+
+"@ngrok/ngrok@^1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@ngrok/ngrok/-/ngrok-1.5.2.tgz#a0d70591dad8d7e7f0852d7922874bf90113651d"
+  integrity sha512-gN7KKdLTKer+wBSk9s9eDx53MUFdcnXNHsXxiC5sJLLD5HY9JRMSn6UzcCqnk7IgeIgCgw5h1k6YDqhjx6lmtg==
+  optionalDependencies:
+    "@ngrok/ngrok-android-arm64" "1.5.2"
+    "@ngrok/ngrok-darwin-arm64" "1.5.2"
+    "@ngrok/ngrok-darwin-universal" "1.5.2"
+    "@ngrok/ngrok-darwin-x64" "1.5.2"
+    "@ngrok/ngrok-freebsd-x64" "1.5.2"
+    "@ngrok/ngrok-linux-arm-gnueabihf" "1.5.2"
+    "@ngrok/ngrok-linux-arm64-gnu" "1.5.2"
+    "@ngrok/ngrok-linux-arm64-musl" "1.5.2"
+    "@ngrok/ngrok-linux-x64-gnu" "1.5.2"
+    "@ngrok/ngrok-linux-x64-musl" "1.5.2"
+    "@ngrok/ngrok-win32-arm64-msvc" "1.5.2"
+    "@ngrok/ngrok-win32-ia32-msvc" "1.5.2"
+    "@ngrok/ngrok-win32-x64-msvc" "1.5.2"
+
 "@noble/hashes@^1.1.5":
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/@noble/hashes/-/hashes-1.8.0.tgz#cee43d801fcef9644b11b8194857695acd5f815a"

@@ -23,6 +23,7 @@ import {
   CreateAdoptionDto,
 } from './dto';
 import { PetService } from '../pet/pet.service';
+import { UserService } from '../user/user.service';
 import { PetStatus } from '../pet/entities/pet.entity';
 
 @ApiTags('📋 Adoption')
@@ -31,6 +32,7 @@ export class AdoptionController extends BaseResolver {
   constructor(
     private readonly adoptionService: AdoptionService,
     private readonly petService: PetService,
+    private readonly userService: UserService,
   ) {
     super();
   }
@@ -43,7 +45,31 @@ export class AdoptionController extends BaseResolver {
     type: AdoptionResponse,
   })
   async create(@Body() dto: CreateAdoptionDto) {
-    const adoption = await this.adoptionService.save(dto);
+    const pet = await this.petService.findOne({
+      where: { id: dto.pet_id },
+    });
+
+    if (!pet) {
+      throw new BadRequestException(this.wrapFail('Pet not found'));
+    }
+
+    if (pet.status === PetStatus.ADOPTED) {
+      throw new BadRequestException(this.wrapFail('Pet is already adopted'));
+    }
+
+    const user = await this.userService.findOne({
+      where: { id: dto.applicant_id },
+    });
+
+    if (!user) {
+      throw new BadRequestException(this.wrapFail('User not found'));
+    }
+
+    const adoption = await this.adoptionService.save({
+      ...dto,
+      status: AdoptionStatus.PENDING,
+    });
+
     return this.wrapSuccess({ adoption });
   }
 
@@ -93,26 +119,28 @@ export class AdoptionController extends BaseResolver {
     return this.wrapSuccess({ adoption });
   }
 
-  // @Get('by-applicant/:applicantId')
-  // @ApiOperation({
-  //   summary: 'Get all adoption applications by a specific applicant',
-  // })
-  // @ApiParam({
-  //   name: 'applicantId',
-  //   description: 'Applicant ID',
-  //   example: '550e8400-e29b-41d4-a716-446655440002',
-  // })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Return all adoption applications by the applicant.',
-  //   type: AdoptionApplicationsResponse,
-  // })
-  // async findByApplicant(@Param('applicantId') applicantId: string) {
-  //   const adoptionApplications = await this.adoptionService.find({
-  //     where: { applicant_id: applicantId },
-  //   });
-  //   return this.wrapSuccess({ adoptionApplications });
-  // }
+  @Get('by-applicant/:applicantId')
+  @ApiOperation({
+    summary: 'Get all adoption applications by a specific applicant',
+  })
+  @ApiParam({
+    name: 'applicantId',
+    description: 'Applicant ID',
+    example: '550e8400-e29b-41d4-a716-446655440002',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all adoption applications by the applicant.',
+    type: AdoptionsResponse,
+  })
+  async findByApplicant(
+    @Param('applicantId', ParseUUIDPipe) applicantId: string,
+  ) {
+    const adoptionApplications = await this.adoptionService.find({
+      where: { applicant_id: applicantId },
+    });
+    return this.wrapSuccess({ adoptionApplications });
+  }
 
   @Get(':id')
   @ApiOperation({ summary: 'Get an adoption by id' })
@@ -175,7 +203,7 @@ export class AdoptionController extends BaseResolver {
     await this.adoptionService.update(id, dto);
 
     if (dto.status === AdoptionStatus.APPROVED) {
-      await this.petService.update(adoption.pet_id, {
+      await this.petService.update(adoption.pet.id, {
         status: PetStatus.ADOPTED,
       });
     }

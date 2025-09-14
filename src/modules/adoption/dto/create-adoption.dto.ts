@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
+import { IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
 
 export class CreateAdoptionDto {
   @ApiProperty({
@@ -10,35 +10,13 @@ export class CreateAdoptionDto {
   @IsNotEmpty()
   pet_id: string;
 
-  // @ApiProperty({
-  //   description: 'Full name of the applicant',
-  //   example: 'John Michael Smith',
-  //   minLength: 2,
-  //   maxLength: 100,
-  // })
-  // @IsString()
-  // @IsNotEmpty()
-  // @Length(2, 100)
-  // applicant_name: string;
-
-  // @ApiProperty({
-  //   description: 'Phone number of the applicant',
-  //   example: '+1234567890',
-  //   minLength: 10,
-  //   maxLength: 20,
-  // })
-  // @IsString()
-  // @IsNotEmpty()
-  // @Length(10, 20)
-  // applicant_phone: string;
-
-  // @ApiProperty({
-  //   description: 'Email address of the applicant',
-  //   example: 'john.smith@example.com',
-  // })
-  // @IsEmail()
-  // @IsNotEmpty()
-  // applicant_email: string;
+  @ApiProperty({
+    description: 'ID of the user',
+    example: '550e8400-e29b-41d4-a716-446655440001',
+  })
+  @IsUUID()
+  @IsNotEmpty()
+  applicant_id: string;
 
   @ApiProperty({
     description: 'Message explaining why the applicant wants to adopt this pet',
