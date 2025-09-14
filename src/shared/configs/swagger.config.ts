@@ -7,5 +7,6 @@ export function getSwaggerConfig() {
       'REST API for pet shelter management system. Help animals find their forever homes through adoption applications and shelter operations',
     )
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
 }
