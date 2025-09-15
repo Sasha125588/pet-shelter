@@ -7,7 +7,6 @@ import { SortOrder } from 'src/shared/types/sort-order';
 export class GetPetsDto {
   @ApiProperty({
     description: 'Filter by pet name',
-    example: 'Bobik',
     required: false,
   })
   @IsOptional()
@@ -16,6 +15,7 @@ export class GetPetsDto {
 
   @ApiProperty({
     description: 'Filter by status',
+    enum: PetStatus,
     example: PetStatus.AVAILABLE,
     required: false,
   })

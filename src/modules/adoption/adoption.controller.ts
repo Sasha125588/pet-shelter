@@ -45,25 +45,27 @@ export class AdoptionController extends BaseResolver {
     type: AdoptionResponse,
   })
   async create(@Body() dto: CreateAdoptionDto) {
+    const existingAdoption = await this.adoptionService.findOne({
+      where: { applicantId: dto.applicantId, petId: dto.petId },
+    });
+
+    if (existingAdoption)
+      throw new BadRequestException(this.wrapFail('Adoption already exist'));
+
     const pet = await this.petService.findOne({
       where: { id: dto.petId },
     });
 
-    if (!pet) {
-      throw new BadRequestException(this.wrapFail('Pet not found'));
-    }
+    if (!pet) throw new BadRequestException(this.wrapFail('Pet not found'));
 
-    if (pet.status === PetStatus.ADOPTED) {
+    if (pet.status === PetStatus.ADOPTED)
       throw new BadRequestException(this.wrapFail('Pet is already adopted'));
-    }
 
     const user = await this.userService.findOne({
       where: { id: dto.applicantId },
     });
 
-    if (!user) {
-      throw new BadRequestException(this.wrapFail('User not found'));
-    }
+    if (!user) throw new BadRequestException(this.wrapFail('User not found'));
 
     const adoption = await this.adoptionService.save({
       ...dto,
