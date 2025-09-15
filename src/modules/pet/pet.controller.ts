@@ -12,10 +12,9 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { PetService } from './pet.service';
-import { CreatePetDto, UpdatePetDto } from './dto';
+import { CreatePetDto, GetPetsDto, UpdatePetDto } from './dto';
 import { PetResponse, PetsResponse } from './pet.model';
 import { BaseResolver } from 'src/shared/base/base.resolver';
-import { GetPetsDto } from './dto/get-pets.dto';
 import { SortOrder } from 'src/shared/types/sort-order';
 
 @ApiTags('🐱 Pet')

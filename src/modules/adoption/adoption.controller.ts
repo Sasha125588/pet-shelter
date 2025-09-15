@@ -46,7 +46,7 @@ export class AdoptionController extends BaseResolver {
   })
   async create(@Body() dto: CreateAdoptionDto) {
     const pet = await this.petService.findOne({
-      where: { id: dto.pet_id },
+      where: { id: dto.petId },
     });
 
     if (!pet) {
@@ -58,7 +58,7 @@ export class AdoptionController extends BaseResolver {
     }
 
     const user = await this.userService.findOne({
-      where: { id: dto.applicant_id },
+      where: { id: dto.applicantId },
     });
 
     if (!user) {
@@ -95,8 +95,8 @@ export class AdoptionController extends BaseResolver {
     }
     query.addOrderBy('adoption.created_at', dto.sort ?? SortOrder.DESC);
 
-    const adoption = await query.getMany();
-    return this.wrapSuccess({ adoption });
+    const adoptions = await query.getMany();
+    return this.wrapSuccess({ adoptions });
   }
 
   @Get('by-pet/:petId')
@@ -113,10 +113,10 @@ export class AdoptionController extends BaseResolver {
     type: AdoptionsResponse,
   })
   async findByPetId(@Param('petId', ParseUUIDPipe) petId: string) {
-    const adoption = await this.adoptionService.find({
-      where: { pet_id: petId },
+    const adoptions = await this.adoptionService.find({
+      where: { petId },
     });
-    return this.wrapSuccess({ adoption });
+    return this.wrapSuccess({ adoptions });
   }
 
   @Get('by-applicant/:applicantId')
@@ -126,7 +126,7 @@ export class AdoptionController extends BaseResolver {
   @ApiParam({
     name: 'applicantId',
     description: 'Applicant ID',
-    example: '550e8400-e29b-41d4-a716-446655440002',
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   @ApiResponse({
     status: 200,
@@ -137,7 +137,7 @@ export class AdoptionController extends BaseResolver {
     @Param('applicantId', ParseUUIDPipe) applicantId: string,
   ) {
     const adoptions = await this.adoptionService.find({
-      where: { applicant_id: applicantId },
+      where: { applicantId },
     });
     return this.wrapSuccess({ adoptions });
   }

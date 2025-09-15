@@ -28,8 +28,8 @@ export enum AdoptionStatus {
 
 @Entity('adoptions')
 @Index(['status'])
-@Index(['pet_id'])
-@Index(['applicant_id'])
+@Index(['petId'])
+@Index(['applicantId'])
 export class Adoption {
   @ApiProperty({
     description: 'Unique identifier of the adoption',
@@ -69,10 +69,10 @@ export class Adoption {
     description: 'ID of the pet to be adopted',
     example: '550e8400-e29b-41d4-a716-446655440001',
   })
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', name: 'pet_id' })
   @IsUUID()
   @IsNotEmpty()
-  pet_id: string;
+  petId: string;
 
   @ApiProperty({
     description: 'Pet information',
@@ -86,10 +86,10 @@ export class Adoption {
     description: 'ID of the user who submitted the application',
     example: '550e8400-e29b-41d4-a716-446655440002',
   })
-  @Column({ type: 'uuid' })
+  @Column({ type: 'uuid', name: 'applicant_id' })
   @IsUUID()
   @IsNotEmpty()
-  applicant_id: string;
+  applicantId: string;
 
   @ApiProperty({
     description: 'Applicant information',

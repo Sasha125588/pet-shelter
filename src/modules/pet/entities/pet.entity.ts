@@ -75,7 +75,7 @@ export class Pet {
     description: 'Array of photo URLs for the pet',
     example: ['https://example.com/dog.jpg', 'https://example.com/dog2.jpg'],
   })
-  @Column('simple-array', { nullable: true })
+  @Column('simple-array', { nullable: true, name: 'photo_urls' })
   photoUrls: string[];
 
   @ApiProperty({

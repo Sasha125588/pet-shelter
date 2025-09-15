@@ -64,7 +64,7 @@ export class CreatePetDto {
   @ApiProperty({
     type: [String],
     description: 'Array of photo URLs for the pet',
-    example: ['https://example.com/dog.jpg', 'https://example.com/dog2.jpg'],
+    example: ['https://example.com/cat.jpg', 'https://example.com/cat2.jpg'],
     required: false,
   })
   @IsArray()

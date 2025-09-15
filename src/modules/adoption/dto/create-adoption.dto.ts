@@ -4,19 +4,19 @@ import { IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
 export class CreateAdoptionDto {
   @ApiProperty({
     description: 'ID of the pet to be adopted',
-    example: '550e8400-e29b-41d4-a716-446655440001',
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   @IsUUID()
   @IsNotEmpty()
-  pet_id: string;
+  petId: string;
 
   @ApiProperty({
     description: 'ID of the user',
-    example: '550e8400-e29b-41d4-a716-446655440001',
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   @IsUUID()
   @IsNotEmpty()
-  applicant_id: string;
+  applicantId: string;
 
   @ApiProperty({
     description: 'Message explaining why the applicant wants to adopt this pet',
