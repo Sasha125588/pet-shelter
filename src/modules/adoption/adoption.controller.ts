@@ -26,7 +26,7 @@ import { PetService } from '../pet/pet.service';
 import { UserService } from '../user/user.service';
 import { PetStatus } from '../pet/entities/pet.entity';
 
-@ApiTags('📋 Adoption')
+@ApiTags('📋 Adoptions')
 @Controller('adoptions')
 export class AdoptionController extends BaseResolver {
   constructor(
@@ -44,16 +44,21 @@ export class AdoptionController extends BaseResolver {
     description: 'The adoption has been successfully created.',
     type: AdoptionResponse,
   })
-  async create(@Body() dto: CreateAdoptionDto) {
+  async create(@Body() CreateAdoptionDto: CreateAdoptionDto) {
+    const { applicantId, petId } = CreateAdoptionDto;
+
     const existingAdoption = await this.adoptionService.findOne({
-      where: { applicantId: dto.applicantId, petId: dto.petId },
+      where: {
+        applicantId,
+        petId,
+      },
     });
 
     if (existingAdoption)
       throw new BadRequestException(this.wrapFail('Adoption already exist'));
 
     const pet = await this.petService.findOne({
-      where: { id: dto.petId },
+      where: { id: petId },
     });
 
     if (!pet) throw new BadRequestException(this.wrapFail('Pet not found'));
@@ -62,13 +67,13 @@ export class AdoptionController extends BaseResolver {
       throw new BadRequestException(this.wrapFail('Pet is already adopted'));
 
     const user = await this.userService.findOne({
-      where: { id: dto.applicantId },
+      where: { id: applicantId },
     });
 
     if (!user) throw new BadRequestException(this.wrapFail('User not found'));
 
     const adoption = await this.adoptionService.save({
-      ...dto,
+      ...CreateAdoptionDto,
       status: AdoptionStatus.PENDING,
     });
 
@@ -82,20 +87,22 @@ export class AdoptionController extends BaseResolver {
     description: 'Return all adoption.',
     type: AdoptionsResponse,
   })
-  async findAll(@Query() dto: GetAdoptionsDto) {
+  async findAll(@Query() GetAdoptionsDto: GetAdoptionsDto) {
+    const { name, status, sort } = GetAdoptionsDto;
+
     const query = this.adoptionService
       .createQueryBuilder('adoption')
       .leftJoinAndSelect('adoption.pet', 'pet');
 
-    if (dto.name) {
+    if (name) {
       query.andWhere('pet.name ILIKE :name', {
-        name: `%${dto.name}%`,
+        name: `%${name}%`,
       });
     }
-    if (dto.status) {
-      query.andWhere('adoption.status = :status', { status: dto.status });
+    if (status) {
+      query.andWhere('adoption.status = :status', { status: status });
     }
-    query.addOrderBy('adoption.created_at', dto.sort ?? SortOrder.DESC);
+    query.addOrderBy('adoption.created_at', sort ?? SortOrder.DESC);
 
     const adoptions = await query.getMany();
     return this.wrapSuccess({ adoptions });
@@ -180,8 +187,10 @@ export class AdoptionController extends BaseResolver {
   })
   async updateStatus(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() dto: UpdateAdoptionStatusDto,
+    @Body() UpdateAdoptionStatusDto: UpdateAdoptionStatusDto,
   ) {
+    const { status } = UpdateAdoptionStatusDto;
+
     const adoption = await this.adoptionService.findOne({
       where: { id },
     });
@@ -192,8 +201,8 @@ export class AdoptionController extends BaseResolver {
 
     if (
       (adoption.status === AdoptionStatus.APPROVED &&
-        dto.status === AdoptionStatus.PENDING) ||
-      dto.status === AdoptionStatus.REJECTED
+        status === AdoptionStatus.PENDING) ||
+      status === AdoptionStatus.REJECTED
     ) {
       throw new BadRequestException(
         this.wrapFail(
@@ -202,9 +211,9 @@ export class AdoptionController extends BaseResolver {
       );
     }
 
-    await this.adoptionService.update(id, dto);
+    await this.adoptionService.update(id, UpdateAdoptionStatusDto);
 
-    if (dto.status === AdoptionStatus.APPROVED) {
+    if (status === AdoptionStatus.APPROVED) {
       await this.petService.update(adoption.pet.id, {
         status: PetStatus.ADOPTED,
       });

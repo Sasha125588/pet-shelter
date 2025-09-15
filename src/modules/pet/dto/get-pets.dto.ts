@@ -16,7 +16,6 @@ export class GetPetsDto {
   @ApiProperty({
     description: 'Filter by status',
     enum: PetStatus,
-    example: PetStatus.AVAILABLE,
     required: false,
   })
   @IsOptional()

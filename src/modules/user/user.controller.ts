@@ -1,10 +1,11 @@
 import { Controller, Get, HttpCode, HttpStatus, Req } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UseJwtAuth } from '../auth/jwt';
 import { BaseResolver } from 'src/shared/base';
 import { Request } from 'express';
 
+@ApiTags('🙎‍♀️🙎‍♂️Users')
 @Controller('users')
 export class UserController extends BaseResolver {
   constructor(private readonly userService: UserService) {

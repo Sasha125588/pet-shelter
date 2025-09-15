@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -11,11 +10,11 @@ import {
 import { AuthService } from './auth.service';
 import { RegisterRequstDto, LoginRequestDto } from './dto';
 import type { Request, Response } from 'express';
-import { ApiBearerAuth, ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthResponse } from './auth.model';
 import { BaseResolver } from 'src/shared/base/base.resolver';
-import { UseJwtAuth } from './jwt';
 
+@ApiTags('🔐 Auth')
 @Controller('auth')
 export class AuthController extends BaseResolver {
   constructor(private readonly authService: AuthService) {
@@ -76,17 +75,4 @@ export class AuthController extends BaseResolver {
     const isSuccess = await this.authService.logout(res);
     return this.wrapSuccess(isSuccess);
   }
-
-  // @ApiOperation({
-  //   summary: 'Get current user',
-  //   description: 'Returns information about the currently authenticated user',
-  // })
-  // @ApiBearerAuth()
-  // @UseJwtAuth()
-  // @Get('@me')
-  // @HttpCode(HttpStatus.OK)
-  // me(@Req() req: Request) {
-  //   const user = req.user;
-  //   return this.wrapSuccess({ user });
-  // }
 }

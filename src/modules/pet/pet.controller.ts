@@ -17,7 +17,7 @@ import { PetResponse, PetsResponse } from './pet.model';
 import { BaseResolver } from 'src/shared/base/base.resolver';
 import { SortOrder } from 'src/shared/types/sort-order';
 
-@ApiTags('🐱 Pet')
+@ApiTags('🐱 Pets')
 @Controller('pets')
 export class PetController extends BaseResolver {
   constructor(private readonly petService: PetService) {
@@ -31,8 +31,8 @@ export class PetController extends BaseResolver {
     description: 'The pet has been successfully created.',
     type: PetResponse,
   })
-  async create(@Body() dto: CreatePetDto) {
-    const pet = await this.petService.save(dto);
+  async create(@Body() CreatePetDto: CreatePetDto) {
+    const pet = await this.petService.save(CreatePetDto);
     return this.wrapSuccess({ pet });
   }
 
@@ -44,17 +44,19 @@ export class PetController extends BaseResolver {
     type: PetsResponse,
   })
   async findAll(@Query() getPetsDto: GetPetsDto) {
+    const { name, status, sort } = getPetsDto;
+
     const query = this.petService.createQueryBuilder('pet');
 
-    if (getPetsDto.name) {
+    if (name) {
       query.andWhere('pet.name ILIKE :name', {
-        name: `%${getPetsDto.name}%`,
+        name: `%${name}%`,
       });
     }
-    if (getPetsDto.status) {
-      query.andWhere('pet.status = :status', { status: getPetsDto.status });
+    if (status) {
+      query.andWhere('pet.status = :status', { status: status });
     }
-    query.addOrderBy('pet.created_at', getPetsDto.sort ?? SortOrder.DESC);
+    query.addOrderBy('pet.created_at', sort ?? SortOrder.DESC);
 
     const pets = await query.getMany();
     return this.wrapSuccess({ pets });
@@ -94,7 +96,7 @@ export class PetController extends BaseResolver {
   })
   async update(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() dto: UpdatePetDto,
+    @Body() UpdatePetDto: UpdatePetDto,
   ) {
     const pet = await this.petService.findOne({ where: { id } });
 
@@ -102,7 +104,7 @@ export class PetController extends BaseResolver {
       throw new BadRequestException(this.wrapFail('Pet not found'));
     }
 
-    await this.petService.update(id, dto);
+    await this.petService.update(id, UpdatePetDto);
 
     const updatedPet = await this.petService.findOne({ where: { id } });
     return this.wrapSuccess({ updatedPet });
