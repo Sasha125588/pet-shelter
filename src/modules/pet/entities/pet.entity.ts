@@ -93,7 +93,7 @@ export class Pet {
     required: false,
   })
   @OneToMany(() => Adoption, (application) => application.pet)
-  adoptionApplications: Adoption[];
+  adoptions: Adoption[];
 
   @ApiProperty({
     type: 'string',
