@@ -14,11 +14,15 @@ import {
 export class User {
   @PrimaryGeneratedColumn('uuid')
   @ApiProperty({
-    description: 'Уникальный идентификатор пользователя',
-    example: '1a2b3c4d-5678-90ef-gh12-3456789ijklm',
+    description: 'Unique identifier of the user',
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   id: string;
 
+  @ApiProperty({
+    description: 'User name',
+    example: 'test',
+  })
   @Column({
     type: 'varchar',
     name: 'username',
@@ -26,6 +30,10 @@ export class User {
   })
   username: string;
 
+  @ApiProperty({
+    description: 'User email',
+    example: 'test@gmail.com',
+  })
   @Column({
     type: 'varchar',
     name: 'email',
@@ -33,6 +41,10 @@ export class User {
   })
   email: string;
 
+  @ApiProperty({
+    description: 'User password',
+    example: 'test123',
+  })
   @Exclude()
   @Column({
     type: 'varchar',

@@ -25,17 +25,17 @@ export class Pet {
   @ApiProperty({
     type: 'string',
     description: 'Unique pet identifier',
-    example: 'e6e62459-02c0-456a-a0b3-5d26a5b75e87',
+    example: 'c7c30028-a47e-425b-a42a-3970f81999c7',
   })
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @ApiProperty({
     type: 'string',
-    description: 'Unique pet identifier',
-    example: 'e6e62459-02c0-456a-a0b3-5d26a5b75e87',
+    description: 'Pet name',
+    example: 'Bobik',
   })
-  @Column({ type: 'text' })
+  @Column({ type: 'varchar', nullable: true })
   name: string;
 
   @ApiProperty({
@@ -49,7 +49,8 @@ export class Pet {
   @ApiProperty({
     type: 'string',
     description: 'Pet sex',
-    example: 'Female',
+    enum: Sex,
+    example: Sex.FEMALE,
   })
   @Column({ type: 'enum', enum: Sex })
   sex: Sex;
@@ -67,7 +68,7 @@ export class Pet {
     description: 'Pet breed',
     example: 'British Shorthair',
   })
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   breed: string;
 
   @ApiProperty({
@@ -92,7 +93,7 @@ export class Pet {
     description: 'Adoption applications for this pet',
     required: false,
   })
-  @OneToMany(() => Adoption, (application) => application.pet)
+  @OneToMany(() => Adoption, (adoption) => adoption.pet)
   adoptions: Adoption[];
 
   @ApiProperty({

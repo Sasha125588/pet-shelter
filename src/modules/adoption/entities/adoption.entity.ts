@@ -14,8 +14,7 @@ import {
   IsString,
   IsUUID,
   IsEnum,
-  Length,
-  IsEmail,
+  MaxLength,
 } from 'class-validator';
 import { Pet } from 'src/modules/pet/entities/pet.entity';
 import { User } from 'src/modules/user/entities/user.entity';
@@ -56,13 +55,12 @@ export class Adoption {
       'Message from the applicant explaining why they want to adopt this pet',
     example:
       'I want to give love and care to this wonderful animal. I have experience with dogs and a large yard.',
-    minLength: 10,
-    maxLength: 1000,
+    maxLength: 512,
   })
   @Column({ type: 'text' })
   @IsString()
   @IsNotEmpty()
-  @Length(10, 1000)
+  @MaxLength(512)
   message: string;
 
   @ApiProperty({
