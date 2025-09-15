@@ -29,7 +29,7 @@ async function bootstrap() {
 
   await app.listen(port);
 
-  const tunnel = await ngrok.forward({
+  const tunnel = await ngrok.connect({
     addr: port,
     authtoken: process.env.NGROK_AUTH_TOKEN,
   });

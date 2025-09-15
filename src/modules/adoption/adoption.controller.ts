@@ -13,7 +13,7 @@ import {
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 
 import { AdoptionStatus } from './entities/adoption.entity';
-import { SortOrder } from './dto/get-adoptions.dto';
+import { SortOrder } from '../../shared/types/sort-order';
 import { BaseResolver } from 'src/shared/base/base.resolver';
 import { AdoptionService } from './adoption.service';
 import { AdoptionResponse, AdoptionsResponse } from './adoption.model';
@@ -136,10 +136,10 @@ export class AdoptionController extends BaseResolver {
   async findByApplicant(
     @Param('applicantId', ParseUUIDPipe) applicantId: string,
   ) {
-    const adoptionApplications = await this.adoptionService.find({
+    const adoptions = await this.adoptionService.find({
       where: { applicant_id: applicantId },
     });
-    return this.wrapSuccess({ adoptionApplications });
+    return this.wrapSuccess({ adoptions });
   }
 
   @Get(':id')

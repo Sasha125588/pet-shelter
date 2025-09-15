@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDateString, IsEnum, IsOptional, IsString } from 'class-validator';
-import { AdoptionStatus } from '../entities/adoption.entity';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
+import { PetStatus } from '../entities/pet.entity';
 import { SortOrder } from 'src/shared/types/sort-order';
-export class GetAdoptionsDto {
+
+export class GetPetsDto {
   @ApiProperty({
     description: 'Filter by pet name',
     example: 'Bobik',
@@ -15,12 +16,12 @@ export class GetAdoptionsDto {
 
   @ApiProperty({
     description: 'Filter by status',
-    example: AdoptionStatus.PENDING,
+    example: PetStatus.AVAILABLE,
     required: false,
   })
   @IsOptional()
-  @IsEnum(AdoptionStatus)
-  status?: AdoptionStatus;
+  @IsEnum(PetStatus)
+  status?: PetStatus;
 
   @ApiProperty({
     description: 'Sort order for creation date',

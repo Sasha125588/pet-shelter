@@ -8,12 +8,15 @@ import {
   Delete,
   BadRequestException,
   ParseUUIDPipe,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { PetService } from './pet.service';
 import { CreatePetDto, UpdatePetDto } from './dto';
 import { PetResponse, PetsResponse } from './pet.model';
 import { BaseResolver } from 'src/shared/base/base.resolver';
+import { GetPetsDto } from './dto/get-pets.dto';
+import { SortOrder } from 'src/shared/types/sort-order';
 
 @ApiTags('🐱 Pet')
 @Controller('pets')
@@ -41,9 +44,20 @@ export class PetController extends BaseResolver {
     description: 'Return all pets.',
     type: PetsResponse,
   })
-  async findAll() {
-    const pets = await this.petService.findAll();
+  async findAll(@Query() getPetsDto: GetPetsDto) {
+    const query = this.petService.createQueryBuilder('pet');
 
+    if (getPetsDto.name) {
+      query.andWhere('pet.name ILIKE :name', {
+        name: `%${getPetsDto.name}%`,
+      });
+    }
+    if (getPetsDto.status) {
+      query.andWhere('pet.status = :status', { status: getPetsDto.status });
+    }
+    query.addOrderBy('pet.created_at', getPetsDto.sort ?? SortOrder.DESC);
+
+    const pets = await query.getMany();
     return this.wrapSuccess({ pets });
   }
 

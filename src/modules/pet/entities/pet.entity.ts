@@ -100,7 +100,7 @@ export class Pet {
     description: 'Date when the pet record was created',
     example: '2024-01-15T10:30:00.000Z',
   })
-  @CreateDateColumn()
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
   @ApiProperty({
@@ -108,6 +108,6 @@ export class Pet {
     description: 'Date when the pet record was last updated',
     example: '2024-01-16T14:20:00.000Z',
   })
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 }

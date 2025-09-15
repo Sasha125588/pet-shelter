@@ -103,13 +103,13 @@ export class Adoption {
     description: 'Date when the adoption was created',
     example: '2024-01-15T10:30:00.000Z',
   })
-  @CreateDateColumn()
-  created_at: Date;
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
 
   @ApiProperty({
     description: 'Date when the adoption was last updated',
     example: '2024-01-16T14:20:00.000Z',
   })
-  @UpdateDateColumn()
-  updated_at: Date;
+  @UpdateDateColumn({ name: 'updated_at' })
+  updatedAt: Date;
 }
